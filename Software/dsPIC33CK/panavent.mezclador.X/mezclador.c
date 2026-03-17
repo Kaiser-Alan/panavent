@@ -15,7 +15,7 @@
 #include <libpic30.h> 
 
 
-#define VALVE_NUM_MUESTRAS                  0.001/TIMER1_PERIOD  //equiv. # eventos en 1ms 
+#define VALVE_NUM_MUESTRAS                  0.001/TIMER1_PERIOD  
 #define MEZCL_RESISTENCIA_MEDICION          0.1  
 #define MEZCL_RES_TOTAL                     52.74
 #define MEZCL_VALVE_IMAX                    0.200
@@ -149,11 +149,11 @@ ErrorCode Mezclador_inicializar() {
     ADCON3Lbits.CNVCHSEL = CANAL_AIRE;
     dispararConversion=true;
  
-    /*inicializa el controlador pid, si ya no lo está*/
+    /*inicializa el controlador pid, si ya no lo estï¿½*/
     pid.inicializar();
 
     /*inicializa el controlador del timer1 y registra el callback. En este callback
-     se dispara la conversión*/
+     se dispara la conversiï¿½n*/
     timer1Controller.inicializar();
     timer1Controller.agregarCallback(&Mezclador_timerCallBack, TIMER1_PERIOD);
     return NO_ERROR;
@@ -168,7 +168,7 @@ void Mezclador_timerCallBack() {
         } else {  
             ADCON3Lbits.CNVCHSEL = CANAL_OXI;
         }
-        ADCON3Lbits.CNVRTCH = 1;    //dispara la conversión, que tomara aprox. 1.833uS
+        ADCON3Lbits.CNVRTCH = 1;    //dispara la conversiï¿½n, que tomara aprox. 1.833uS
     }
     tiempoMCP += TIMER1_PERIOD; 
     if (tiempoMCP >= TIEMPO_CONV_MCP) {
@@ -180,12 +180,12 @@ void Mezclador_timerCallBack() {
 
 void Mezclador_conversionCallBack(enum ADC_CHANNEL ch, uint16_t adcVal) {
     
-    // Coversion a voltaje y división entre 100 para eliminar la ganancia.
+    // Coversion a voltaje y divisiï¿½n entre 100 para eliminar la ganancia.
     float volt = 0.00000805860805860806f * (float) adcVal; //0.0008058608058608060000 * 0.01 
 
     float il = MEZCL_CAL_M_IL * (volt / MEZCL_RESISTENCIA_MEDICION) + MEZCL_CAL_B_IL;
 
-    // Factor común para ambos canales
+    // Factor comï¿½n para ambos canales
     float corriente = ((int)(il * 1000) / 1000.0f);  // Redondeo a 3 decimales
 
     // Selecciona el filtro y el PID request en base al canal
@@ -204,7 +204,7 @@ void Mezclador_conversionCallBack(enum ADC_CHANNEL ch, uint16_t adcVal) {
         filter = &airFilter;
         isOxi=false;
     } else {
-        return; // Si no coincide con ningún canal esperado, salir de la función
+        return; // Si no coincide con ningï¿½n canal esperado, salir de la funciï¿½n
     }
 
     // Aplicar filtro y actualizar corriente
